@@ -1,11 +1,32 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arduino_bot">
+
+    <xacro:include filename="$(find arduino_bot_desc)/urdf/arduinobot_ros2_control.xacro"/>
+    <xacro:include filename="$(find arduino_bot_desc)/urdf/arduinobot_gazebo.xacro"/>
 
     <xacro:property name="PI" value="3.14159" />
     <xacro:property name="effort" value="30.0" />
     <xacro:property name="velocity" value="10.0" />
     <xacro:property name="stl_path" value="package://arduino_bot_desc/meshes/" />
 
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+            <mass value="${mass}"/>
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="default_transmission" params="number">
+        <transmission name="trans_${number}">
+            <plugin>transmission_interface/SimpleTransmission</plugin>
+            <joint name="joint_${number}">
+                <mechanical_reduction>1.0</mechanical_reduction>
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="motor_${number}" role="actuator1"/>
+        </transmission>
+    </xacro:macro>
 
     <link name="world"/>
 
@@ -16,6 +37,13 @@
                 <mesh filename="${stl_path}basement.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="-0.5 -0.5 0" rpy="0 0 0"/>
+            <geometry>
+                <mesh filename="${stl_path}basement.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="1.0"/>
     </link>
     <joint name="my_virtual_joint" type="fixed">
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
@@ -30,6 +58,13 @@
                 <mesh filename="${stl_path}base_plate.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="-0.39 -0.39 -0.56" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <mesh filename="${stl_path}base_plate.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.1"/>
     </link>
     <joint name="joint_1" type="revolute">
         <origin xyz="0 0 0.307" rpy="0.0 0.0 0.0"/>
@@ -47,6 +82,13 @@
                 <mesh filename="${stl_path}forward_drive_arm.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="0.19 0.06 -0.08" rpy="0.0 -${PI/2} ${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}forward_drive_arm.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.1"/>
     </link>
     <joint name="joint_2" type="revolute">
         <origin xyz="-0.02 0 0.35" rpy="0.0 0.0 0.0"/>
@@ -64,6 +106,13 @@
                 <mesh filename="${stl_path}horizontal_arm.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="-0.03 -0.4 -0.06" rpy="${PI/2} 0 ${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}horizontal_arm.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.1"/>
     </link>
     <joint name="joint_3" type="revolute">
         <origin xyz="0 0 0.8" rpy="0.0 0.0 0.0"/>
@@ -80,6 +129,13 @@
                 <mesh filename="${stl_path}claw_support.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="0 -0.05 -0.15" rpy="0 0 ${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}claw_support.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.05"/>
     </link>
     <joint name="horizontal_arm_to_claw_support" type="fixed">
         <origin xyz="0 0.82 0" rpy="0.0 0.0 0.0"/>
@@ -94,6 +150,13 @@
                 <mesh filename="${stl_path}right_finger.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="-0.1 0.5 -0.1" rpy="0 0 -${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}right_finger.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.05"/>
     </link>
     <link name="gripper_left">
         <visual>
@@ -102,6 +165,13 @@
                 <mesh filename="${stl_path}left_finger.STL" scale="0.01 0.01 0.01"/>
             </geometry>
         </visual>
+        <collision>
+            <origin xyz="-0.04 0.5 -0.1" rpy="0 0 -${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}left_finger.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </collision>
+        <xacro:default_inertial mass="0.05"/>
     </link>
     <joint name="joint_4" type="revolute">
         <origin xyz="-0.04 0.13 -0.1" rpy="0.0 0.0 0.0"/>
@@ -118,5 +188,10 @@
         <limit lower="0.0" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
         <mimic joint="joint_4" multiplier="-1"/>
     </joint>
+
+    <xacro:default_transmission number="1"/>
+    <xacro:default_transmission number="2"/>
+    <xacro:default_transmission number="3"/>
+    <xacro:default_transmission number="4"/>
 
 </robot>
