@@ -1,3 +1,15 @@
 {
-    "ros.distro": "humble"
+    "ros.distro": "humble",
+    "python.autoComplete.extraPaths": [
+        "/home/aksoni/Documents/projects/ros2/ard_udemy_ws/install/py_examples/lib/python3.10/site-packages",
+        "/home/aksoni/Documents/projects/ros2/ard_udemy_ws/install/py_ard_bot/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/aksoni/Documents/projects/ros2/ard_udemy_ws/install/py_examples/lib/python3.10/site-packages",
+        "/home/aksoni/Documents/projects/ros2/ard_udemy_ws/install/py_ard_bot/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
 }
