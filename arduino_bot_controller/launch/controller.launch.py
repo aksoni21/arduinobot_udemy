@@ -27,13 +27,33 @@ def generate_launch_description():
         executable="spawner",
         arguments=[
             "joint_state_broadcaster",
-            "--controller_manager","/controller_manager"
+            # "--controller_manager","/controller_manager"
+        ]
+    )
+    
+    arm_controller_spawner=Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "arm_controller",
+            # "--controller_manager","/controller_manager"
+        ]
+    )
+    
+    gripper_controller_spawner=Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=[
+            "gripper_controller",
+            # "--controller_manager","/controller_manager"
         ]
     )
     
     
     return LaunchDescription([
         robot_state_publisher_node,
-        robot_description,
+        joint_state_broadcast_spawner,
+        arm_controller_spawner,
+        gripper_controller_spawner,
     ])
                                                 
