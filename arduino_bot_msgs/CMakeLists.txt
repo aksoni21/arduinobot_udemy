@@ -17,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/AddTwoInts.srv"
   "srv/EulerToQuat.srv"
   "srv/QuatToEuler.srv"
+  "action/Fibonacci.action"
 )
 
 if(BUILD_TESTING)

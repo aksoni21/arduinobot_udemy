@@ -22,6 +22,9 @@ setup(
         'console_scripts': [
             'simple_service_server = py_examples.simple_service_server:main',
             'simple_service_client = py_examples.simple_service_client:main'
+            'simple_action_server = py_examples.simple_action_server:main',
+            'simple_new_action_server = py_examples.simple_new_action_server:main',
+            'simple_action_client = py_examples.simple_action_client:main'
         ],
     },
 )
