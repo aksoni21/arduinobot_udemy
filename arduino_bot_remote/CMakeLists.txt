@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(cpp_examples)
+project(arduino_bot_remote)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -8,49 +8,37 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rcl_interfaces REQUIRED)
-find_package(std_msgs REQUIRED)
-find_package(arduino_bot_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(arduino_bot_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 
-add_executable(simple_moveit_interface src/simple_moveit_interface.cpp)
-ament_target_dependencies(simple_moveit_interface rclcpp moveit_ros_planning_interface)
-
-add_library(simple_action_server SHARED src/simple_action_server.cpp)
-target_include_directories(simple_action_server PRIVATE
+add_library(task_server SHARED src/task_server.cpp)
+target_include_directories(task_server PRIVATE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
-target_compile_definitions(simple_action_server
-  PRIVATE "SIMPLE_ACTION_SERVER_CPP_BUILDING_DLL")
-ament_target_dependencies(simple_action_server
+target_compile_definitions(task_server
+  PRIVATE "TASK_SERVER_CPP_BUILDING_DLL")
+ament_target_dependencies(task_server
   "arduino_bot_msgs" 
   "rclcpp"
   "rclcpp_action"
   "rclcpp_components"
+  "moveit_ros_planning_interface"
 )
-rclcpp_components_register_node(simple_action_server
-  PLUGIN "arduinobot_cpp_examples::SimpleActionServer"
-  EXECUTABLE simple_action_server_node
+rclcpp_components_register_node(task_server
+  PLUGIN "arduino_bot_remote::TaskServer"
+  EXECUTABLE task_server_node
 )
 
-
-install(
-TARGETS simple_moveit_interface
-DESTINATION lib/${PROJECT_NAME}
-)
 
 install(TARGETS
-simple_action_server
+task_server
 ARCHIVE DESTINATION lib
 LIBRARY DESTINATION lib
 RUNTIME DESTINATION bin
 )
 
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
