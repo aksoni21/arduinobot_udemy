@@ -7,9 +7,11 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(rclpy REQUIRED)
 find_package(arduino_bot_msgs REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 
@@ -31,6 +33,12 @@ rclcpp_components_register_node(task_server
   EXECUTABLE task_server_node
 )
 
+ament_python_install_package(${PROJECT_NAME})
+
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 install(TARGETS
 task_server
@@ -38,6 +46,12 @@ ARCHIVE DESTINATION lib
 LIBRARY DESTINATION lib
 RUNTIME DESTINATION bin
 )
+
+install(PROGRAMS 
+${PROJECT_NAME}/alexa_interface.py
+DESTINATION lib/${PROJECT_NAME}
+)
+
 
 
 if(BUILD_TESTING)
