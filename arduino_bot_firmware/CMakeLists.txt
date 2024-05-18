@@ -8,6 +8,26 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclpy REQUIRED)
+#for cpp
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(SERIAL libserial)
+
+add_executable(simple_serial_transmitter src/simple_serial_transmitter.cpp) 
+ament_target_dependencies(simple_serial_transmitter rclcpp std_msgs)
+target_include_directories(simple_serial_transmitter PUBLIC "${SERIAL_INCLUDE_DIRS}")
+target_link_libraries(simple_serial_transmitter "${SERIAL_LDFLAGS}")
+
+install(
+  TARGETS simple_serial_transmitter
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  DESTINATION lib/${PROJECT_NAME}
+)
+#end for cpp
 
 ament_python_install_package(${PROJECT_NAME})
 
