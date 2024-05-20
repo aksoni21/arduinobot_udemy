@@ -13,10 +13,15 @@ find_package(std_msgs REQUIRED)
 find_package(arduino_bot_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 
 add_executable(simple_moveit_interface src/simple_moveit_interface.cpp)
 ament_target_dependencies(simple_moveit_interface rclcpp moveit_ros_planning_interface)
+
+add_executable(simple_lifecycle_node src/simple_lifecycle_node.cpp)
+ament_target_dependencies(simple_lifecycle_node rclcpp rclcpp_lifecycle std_msgs )
+
 
 add_library(simple_action_server SHARED src/simple_action_server.cpp)
 target_include_directories(simple_action_server PRIVATE
@@ -37,7 +42,8 @@ rclcpp_components_register_node(simple_action_server
 
 
 install(
-TARGETS simple_moveit_interface
+TARGETS simple_moveit_interface 
+simple_lifecycle_node
 DESTINATION lib/${PROJECT_NAME}
 )
 
