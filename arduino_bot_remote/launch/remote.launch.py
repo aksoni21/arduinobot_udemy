@@ -21,6 +21,6 @@ def generate_launch_description():
     
     
     return LaunchDescription([
-        # task_server_node,
+        task_server_node,
         alexa_interface_node,
     ])

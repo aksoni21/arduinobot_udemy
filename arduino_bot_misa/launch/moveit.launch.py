@@ -15,12 +15,7 @@ def generate_launch_description():
         'is_sim',
         default_value='True'
     )
-    print("---------------------0-----------")
 
-    # moveit_config = (MoveItConfigsBuilder("arduino_bot", package_name="arduino_bot_moveit").robot_description(file_path=os.path.join(get_package_share_directory(
-    #     "arduino_bot_desc"), "urdf", "arduinobot.urdf.xacro")).robot_description_semantic(file_path="config/arduinobot.srdf")
-    #     .trajectory_execution(file_path="config/moveit_controllers.yaml").to_moveit_configs()
-    # )
     moveit_config = (
         MoveItConfigsBuilder("arduinobot", package_name="arduino_bot_misa")
         .robot_description(file_path=os.path.join(
@@ -34,7 +29,7 @@ def generate_launch_description():
         .trajectory_execution(file_path="config/moveit_controllers.yaml")
         .to_moveit_configs()
     )
-    print("---------------------1-----------")
+
     move_group_node = Node(
         package="moveit_ros_move_group",
         executable="move_group",
@@ -44,7 +39,6 @@ def generate_launch_description():
                     {'publish_robot_description_semantic': True}],
         arguments=["--ros-args", "--log-level", "info"],
     )
-    print("---------------------2-----------")
 
     rviz_config = os.path.join(get_package_share_directory(
         "arduino_bot_misa"), "config", "moveit_rviz.rviz")
@@ -61,7 +55,6 @@ def generate_launch_description():
                     moveit_config.robot_description_kinematics,
                     moveit_config.joint_limits]
     )
-    print("---------------------3-----------")
 
     return LaunchDescription([
         is_sim_arg,
