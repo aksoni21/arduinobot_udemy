@@ -17,8 +17,8 @@ uint8_t value_idx = 0;
 
 #define base_pin 12
 #define shoulder_pin 9
-#define elbow_pin 13
-#define gripper_pin 10
+#define elbow_pin 10
+#define gripper_pin 11
 
 void reach_goal(Servo& motor, int goal) {
   if (goal >= motor.read()) {
