@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot_name">
+
+    <xacro:property name="PI" value="3.14159" />
+    <xacro:property name="effort" value="30.0" />
+    <xacro:property name="velocity" value="10.0" />
+    <xacro:property name="stl_path" value="package://arduino_bot_desc/meshes/" />
+
+    <link name="world"/>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 0.4" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.425" length="0.8"/>
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="my_virtual_joint" type="fixed">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="world"/>
+        <child link="base_link"/>
+    </joint>
+
+    <link name="shoulder">
+        <visual>
+            <origin xyz=" 0 0 0.4" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="0.385" length="0.8"/>
+            </geometry>
+            <material name="red">
+                <color rgba="1 0 0 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_1" type="revolute">
+        <origin xyz="0 0 0.8" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="shoulder"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-${PI/2}" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+
+    <link name="elbow">
+        <visual>
+            <origin xyz=" 0 0 0.6" rpy="0.0 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="0.35" length="1"/>
+            </geometry>
+            <material name="green">
+                <color rgba="0 1 0 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="joint_2" type="revolute">
+        <origin xyz="0 0 0.5" rpy="0.0 0.0 0.0"/>
+        <parent link="shoulder"/>
+        <child link="elbow"/>
+        <axis xyz="1 0 0"/>
+        <limit lower="-${PI/2}" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+
+    <link name="claw_support">
+        <visual>
+            <origin xyz="0 -0.05 -0.15" rpy="0 0 ${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}claw_support.STL" scale="0.01 0.01 0.01"/>
+            </geometry>
+        </visual>
+    </link>
+    <joint name="elbow_to_claw_support" type="fixed">
+        <origin xyz="0 0.82 0" rpy="0.0 0.0 0.0"/>
+        <parent link="elbow"/>
+        <child link="claw_support"/>
+    </joint>
+
+    <link name="gripper_right">
+        <visual>
+            <origin xyz="-0.1 0.5 -0.1" rpy="0 0 -${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}right_finger.STL" scale="0.005 0.005 0.005"/>
+            </geometry>
+        </visual>
+    </link>
+    <link name="gripper_left">
+        <visual>
+            <origin xyz="-0.04 0.5 -0.1" rpy="0 0 -${PI/2}"/>
+            <geometry>
+                <mesh filename="${stl_path}left_finger.STL" scale="0.005 0.005 0.005"/>
+            </geometry>
+        </visual>
+    </link>
+    <joint name="joint_4" type="revolute">
+        <origin xyz="-0.04 0.13 -0.1" rpy="0.0 0.0 0.0"/>
+        <parent link="claw_support"/>
+        <child link="gripper_right"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="-${PI/2}" upper="0.0" effort="${effort}" velocity="${velocity}"/>
+    </joint>
+    <joint name="joint_5" type="revolute">
+        <origin xyz="-0.22 0.13 -0.1" rpy="0.0 0.0 0.0"/>
+        <parent link="claw_support"/>
+        <child link="gripper_left"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0.0" upper="${PI/2}" effort="${effort}" velocity="${velocity}"/>
+        <mimic joint="joint_4" multiplier="-1"/>
+    </joint>
+
+</robot>

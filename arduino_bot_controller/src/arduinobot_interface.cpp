@@ -71,7 +71,7 @@ namespace arduinobot_controller
         try
         {
             arduino_.Open(port_);
-            arduino_.SetBaudRate(LibSerial::BaudRate::BAUD_115200);
+            arduino_.SetBaudRate(LibSerial::BaudRate::BAUD_9600);
         }
         catch (...)
         {

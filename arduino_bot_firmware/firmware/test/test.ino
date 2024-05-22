@@ -1,90 +1,35 @@
+//Flask Webapp -> sends goal to service_client.py -> sends goal to service_server.py -> sends the goal to arduino.ino via serial  
+
 #include <Servo.h>
 
-Servo base;
-Servo shoulder;
-Servo elbow;
-Servo gripper;
+Servo motor;
+Servo motor2;
+Servo motor3;
 
-uint8_t idx = 0;
-
-char value[4] = "000";
-uint8_t value_idx = 0;
-
-#define base_start 90
-#define shoulder_start 90
-#define elbow_start 90
-#define gripper_start 0
-
-#define base_pin 12
-#define shoulder_pin 9
-#define elbow_pin 10
-#define gripper_pin 11
-
-void reach_goal(Servo& motor, int goal) {
-  if (goal >= motor.read()) {
-    for (int pos = motor.read(); pos <= goal; pos++) {
-      motor.write(pos);
-      delay(5);
-    }
-  } else {
-    for (int pos = motor.read(); pos >= goal; pos--) {
-      motor.write(pos);
-      delay(5);
-    }
-  }
-}
 
 void setup() {
   // put your setup code here, to run once:
-  base.attach(base_pin);
-  shoulder.attach(shoulder_pin);
-  elbow.attach(elbow_pin);
-  gripper.attach(gripper_pin);
+  motor.attach(10);
+  // motor2.attach(5);
+  // motor3.attach(11);
+  motor.write(90);
+  // motor2.write(90);
+  // motor3.write(90);
 
-  base.write(base_start);
-  shoulder.write(shoulder_start);
-  elbow.write(elbow_start);
-  gripper.write(gripper_start);
-
-  Serial.begin(115200);
+  Serial.begin(9600);
   Serial.setTimeout(1);
+
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
 
-  if (Serial.available()) {
-    char chr = Serial.read();
-    if (chr == 'b') {
-      idx = 0;
-      value_idx = 0;
-    } else if (chr == 's') {
-      idx = 1;
-      value_idx = 1;
-    } else if (chr == 'e') {
-      idx = 2;
-      value_idx = 2;
-    } else if (chr == 'g') {
-      idx = 3;
-      value_idx = 3;
-    } else if (chr == ',') {
-      int val = atoi(value);
-      if (idx == 0) {
-        reach_goal(base, val);
-      } else if (idx == 1) {
-        reach_goal(shoulder, val);
-      } else if (idx == 2) {
-        reach_goal(elbow, val);
-      } else if (idx == 3) {
-        reach_goal(gripper, val);
-      }
-      value[0] = '0';
-      value[1] = '0';
-      value[2] = '0';
-
-    } else {
-      value[value_idx] = chr;
-      value_idx++;
-    }
+  if(Serial.available())
+  {
+    int angle= Serial.readString().toInt();
+    motor.write(angle);
+    // motor2.write(angle);
+    // motor3.write(angle);
   }
+  delay(1000);
 }

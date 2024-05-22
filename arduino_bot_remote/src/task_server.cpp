@@ -50,6 +50,7 @@ namespace arduino_bot_remote
             {
                 arm_joint_goal = {0.0, 0.0, 0.0};
                 gripper_joint_goal = {-0.7, -0.7};
+                
             }
             else if (goal_handle->get_goal()->task_number == 1)
             {
